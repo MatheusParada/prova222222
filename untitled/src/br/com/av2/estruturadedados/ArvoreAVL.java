@@ -8,13 +8,23 @@ import java.io.FileReader;
 import java.io.IOException;
 
 public class ArvoreAVL {
+    public class DadosNode {
+        int cod;
+        String descricao;
+
+        public DadosNode(int cod, String descricao) {
+            this.cod = cod;
+            this.descricao = descricao;
+        }
+    }
+
     public class Node {
         private Node left, right, parent;
         private int height = 1;
-        private int value;
+        private DadosNode data;
 
-        private Node(int val) {
-            this.value = val;
+        private Node(DadosNode data) {
+            this.data = data;
         }
     }
 
@@ -26,39 +36,38 @@ public class ArvoreAVL {
         return N.height;
     }
 
-    private Node insert(Node node, int value) {
+    private Node insert(Node node, DadosNode data) {
         if (node == null) {
-            return (new Node(value));
+            return (new Node(data));
         }
 
-        if (value < node.value)
-            node.left = insert(node.left, value);
+        if (data.cod < node.data.cod)
+            node.left = insert(node.left, data);
         else
-            node.right = insert(node.right, value);
+            node.right = insert(node.right, data);
 
         node.height = Math.max(height(node.left), height(node.right)) + 1;
 
         int balance = getBalance(node);
 
-        if (balance > 1 && value < node.left.value)
+        if (balance > 1 && data.cod < node.left.data.cod)
             return rightRotate(node);
 
-        if (balance < -1 && value > node.right.value)
+        if (balance < -1 && data.cod > node.right.data.cod)
             return leftRotate(node);
 
-        if (balance > 1 && value > node.left.value) {
+        if (balance > 1 && data.cod > node.left.data.cod) {
             node.left = leftRotate(node.left);
             return rightRotate(node);
         }
 
-        if (balance < -1 && value < node.right.value) {
+        if (balance < -1 && data.cod < node.right.data.cod) {
             node.right = rightRotate(node.right);
             return leftRotate(node);
         }
 
         return node;
     }
-
     private Node rightRotate(Node y) {
         Node x = y.left;
         Node T2 = x.right;
